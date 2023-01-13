@@ -1,0 +1,70 @@
+cube = lambda x:pow(x,3) # complete the lambda function 
+
+def fibonacci(n):
+    # return a list of fibonacci numbers
+    list = [0,1]
+    for i in range(2,n):
+        list.append(list[i-2] + list[i-1])
+    return(list[0:n])
+
+if __name__ == '__main__':
+    n = int(input())
+    print(list(map(cube, fibonacci(n))))
+    
+    
+    
+    
+  ### 2 question  
+    
+    if __name__ == '__main__':
+    x = int(input())
+    y = int(input())
+    z = int(input())
+    n = int(input())
+    print(list([i,j,k] for i in range(x+1) for j in range(y+1) for k in range(z+1)  if i+j+k !=n))
+    
+    
+    
+    
+###3 question  
+Regex_Pattern = r"hackerrank"	# Do not delete 'r'.
+#--
+import re
+
+Test_String = raw_input()
+
+match = re.findall(Regex_Pattern, Test_String)
+
+print "Number of matches :", len(match)
+
+
+
+
+
+### 4 question
+
+Regex_Pattern = r"\d\d\D\d\d\D\d\d\d\d"	# Do not delete 'r'.
+
+import re
+
+
+
+
+
+### 5 question
+Regex_Pattern = r'^[123][120][xs0][30Aa][xsu][\.,]$'	# Do not delete 'r'.
+
+import re
+
+print(str(bool(re.search(Regex_Pattern, input()))).lower())
+
+print(str(bool(re.search(Regex_Pattern, input()))).lower())
+
+
+
+####6 question
+Regex_Pattern = r'^[a-z][1-9][^a-z][^A-Z][A-Z]'	# Do not delete 'r'.
+
+import re
+
+print(str(bool(re.search(Regex_Pattern, input()))).lower())
