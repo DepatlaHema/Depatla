@@ -1,0 +1,25 @@
+import pandas as pd
+house_data = pd.read_csv('https://raw.githubusercontent.com/zekelabs/data-science-complete-tutorial/master/Data/house_rental_data.csv.txt', index_col='Unnamed: 0')
+house_data.rename(columns={'Living.Room':'Livingroom'}, inplace=True)
+house_data.head()
+columns = house_data.columns.tolist()
+feature_data = house_data[columns]
+columns = house_data.columns.tolist()
+target_data = house_data.Price
+from sklearn.model_selection import train_test_split
+trainX,testX, trainY,testY = train_test_split(feature_data, target_data)
+trainX.shape
+lr = LinearRegression(normalize=True)
+lr.fit(trainX,trainY)
+lr.coef_
+testX[:5]
+testY[:5]
+lr.predict(testX[:5])
+from sklearn.linear_model import Ridge,Lasso
+ridge = Ridge(alpha=1000)
+lasso = Lasso(alpha=1000)
+ridge.fit(trainX,trainY)
+lasso.fit(trainX,trainY)
+pred = ridge.predict(testX)
+pred = lasso.predict(testX)
+mean_absolute_error(y_pred=pred, y_true=testY)
