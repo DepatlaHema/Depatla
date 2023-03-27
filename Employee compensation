@@ -1,0 +1,41 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sb
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier,
+                             GradientBoostingClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import confusion_matrix, accuracy_score,
+                            f1_score, roc_curve, roc_auc_score
+import pickle
+df = pd.read_csv(' https://drive.google.com/file/d/1mSkKEe0SUJ7AZHiubxKSke7HWf75JA_Z/view?usp=sharing')
+df.hist(figsize=(10,10), xrot=-45)
+df.filed_complaint.fillna(0, inplace=True)
+df.recently_promoted.fillna(0, inplace=True)
+df['last_evaluation_missing'] =         
+df.last_evaluation.isnull().astype(int)
+df.last_evaluation.fillna(0, inplace=True)
+sb.heatmap(df.corr(),
+ annot=True,
+ cmap=’RdBu_r’,
+ vmin=-1,
+ vmax=1)
+ for feature in df.dtypes[df.dtypes=='object'].index:
+    sb.countplot(data=df, y='{}'.format(features))
+df = df[df.department != 'temp']
+coef = winning_model.feature_importances_
+ind = np.argsort(-coef)
+for i in range(X_train.shape[1]):
+    print("%d. %s (%f)" % (i + 1, X.columns[ind[i]], coef[ind[i]]))
+x = range(X_train.shape[1])
+y = coef[ind][:X_train.shape[1]]
+plt.title("Feature importances")
+ax = plt.subplot()
+plt.barh(x, y, color='red')
+ax.set_yticks(x)
+ax.set_yticklabels(X.columns[ind])
+plt.gca().invert_yaxis()
