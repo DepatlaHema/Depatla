@@ -1,0 +1,119 @@
+import numpy as np 
+import pandas as pd 
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+import statsmodels.api as sm
+from sklearn.preprocessing import StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+import statsmodels.api as sm
+from sklearn.metrics import r2_score
+from sklearn.metrics import mean_squared_error as mse
+from sklearn.metrics import mean_absolute_error as mae
+from sklearn.preprocessing import OneHotEncoder
+df = pd.read_csv("Data/Nutrition__Physical_Activity__and_Obesity_-_Behavioral_Risk_Factor_Surveillance_System.csv")
+df
+df.info()
+df=df.dropna(subset=['Education'])
+df.info()
+def lower_case_column_names(df):
+df.columns=[i.lower() for i in df.columns]
+return df
+df.dtypes
+print(df.duplicated().sum())
+df = df.drop_duplicates()
+df.isna()
+percent_missing = df.isnull().sum() * 100 / len(df)
+percent_missing
+df = df.drop(['age(years)'],1)
+def remove_outliers(df):
+for col in df.select_dtypes(include=np.number).columns:
+q1 = df[col].quantile(0.25)
+q3 = df[col].quantile(0.75)
+iqr = q3 - q1
+lower_bound = q1 - (1.5 * iqr)
+upper_bound = q3 + (1.5 * iqr)
+df.drop(df[(df[col] < lower_bound) | (df[col] > upper_bound)].index, inplace=True)
+remove_outliers(df)
+df
+def standardize_text(df):
+for col in df.select_dtypes(include=['object']).columns:
+df[col] = df[col].str.lower()
+numerical_columns = df.select_dtypes(include=['int', 'float']).columns
+numerical = df[numerical_columns]
+numerical
+numerical = numerical.fillna(numerical.mean())
+numericalcategorical_columns = df.select_dtypes(include=['object']).columns
+categorical = df[categorical_columns]
+categorical
+n_map = {'less than $15,000':0, '$15,000 - $24,999':1, '$25,000 - $34,999':2,'$35,000 - $49,999':3, '$50,000 - $74,999':4, 
+          '$75,000 or greater':5, 'data not reported':6}
+in_map
+df['income'] = df['income'].map(in_map)
+#education
+ed_map = {'less than high school': 0, 'high school graduate':1, 'some college or technical school':2,'college graduate':3}
+ed_map
+df['education'] = df['education'].map(ed_map)
+#race/ethnicity
+rc_map = {'non-hispanic white': 0, 'non-hispanic black':1, 'hispanic':2,'asian':3, 'hawaiian/pacific islander':4,
+       'american indian/alaska native':5, '2 or more races':6, 'other':7}
+rc_map
+df['race/ethnicity'] = df['race/ethnicity'].map(rc_map)
+df
+for col in numerical.columns:
+    sns.displot(numerical[col])
+    plt.show()
+sns.pairplot(numerical)
+corr = numerical.corr()
+sns.heatmap(corr, 
+        xticklabels=corr.columns,
+        yticklabels=corr.columns, 
+        annot=True, cmap='Reds')
+X = df[['yearstart','education', 'locationid']]
+y = numerical['data_value']
+X = df[['yearstart','education', 'locationid']]
+y = numerical['data_value']
+td_scaler=StandardScaler().fit(X_train) 
+
+X_train_scaled=std_scaler.transform(X_train)
+X_test_scaled=std_scaler.transform(X_test)
+print(X_train_scaled)
+print("--------")
+print(X_test_scaled)
+result=pd.DataFrame({"y_test":y_test,"y_pred":y_pred})
+fig, ax = plt.subplots(1,3,figsize=(14,4))
+ax[0].plot(y_pred, y_test, 'o')
+ax[0].set_xlabel("y_test")
+ax[0].set_ylabel("y_pred")
+ax[0].set_title("Test Set -Predicted vs real")
+
+# Get a histogram of the residuals ie: y - y_pred.  Homoscdasticity
+# It resembles a normal distribution?
+ax[1].hist(y_test - y_pred)
+ax[1].set_xlabel("Test y-y_pred")
+ax[1].set_title("Test Set Residual histogram")
+
+ax[2].plot(y_pred,y_test - y_pred,"o")
+ax[2].set_xlabel("predited")
+ax[2].set_ylabel("residuals")
+ax[2].set_title("Residuals by Predicted")
+ax[2].plot(y_pred,np.zeros(len(y_pred)),linestyle='dashed')
+sns.regplot(x='y_test',y='y_pred', data=result, scatter_kws={"color": "red"}, line_kws={"color": "black"})
+mse = mse(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+adj_r2= 1 - (1-r2)*(len(y_test)-1)/(len(y_test)-X_test.shape[1]-1)
+print("Mean Squared Error:", mse)
+print("R-squared:", r2)
+print("Adjusted R-squared:", adj_r2)
+features_importances = pd.DataFrame(data={
+    'Attribute': X_train.columns,
+    'Importance': abs(model.coef_)
+})
+features_importances = features_importances.sort_values(by='Importance', ascending=False)
+features_importancesplt.bar(x=features_importances['Attribute'], height=features_importances['Importance'], color='#087E8B')
+plt.title('Feature importances obtained from coefficients', size=15)
+plt.xticks(rotation='vertical')
+plt.show()df.to_csv("Data/Nutrition__Physical_Activity__and_Obesity_cleaned_data.csv")
