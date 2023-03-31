@@ -1,0 +1,111 @@
+import pandas as pd
+df = pd.read_csv('../input/mobile-price-prediction/mobile_price_data.csv')
+df.head()
+df.info()
+for col in df.columns:
+    print(col, df[col].unique())
+    print('\n')
+df._get_numeric_data()
+initial_df = df
+status = dict(zip(df.columns,list([0]*len(df.columns))))
+status
+def print_processed_status(df):
+    for col in df.columns:
+        print(col, status[col])
+print_processed_status(df)
+def numericize(df,col):
+    return pd.to_numeric(df[col].str.replace('[a-zA-Z]','',regex=True))
+df.head()
+df['mp_speed'] = numericize(df,'mp_speed')
+df['mp_speed'].unique()
+status['mp_speed'] = 1
+df['int_memory'] = numericize(df,'int_memory')
+df['int_memory'].unique()
+status['int_memory'] = 1
+df['ram'] = numericize(df,'ram')
+df['ram'].unique()
+status['ram'] = 1
+df['battery_power'] = numericize(df,'battery_power')
+df['battery_power'].unique()
+status['battery_power'] = 1
+df['mob_width'] = numericize(df,'mob_width')
+df['mob_width'].unique()
+status['mob_width'] = 1
+df['mob_height'] = numericize(df,'mob_height')
+df['mob_height'].unique()
+status['mob_height'] = 1
+df['mob_depth'] = numericize(df,'mob_depth')
+df['mob_depth'].unique()
+status['mob_depth'] = 1
+df['mob_weight'] = numericize(df,'mob_weight')
+df['mob_weight'].unique()
+status['mob_weight'] = 1
+df._get_numeric_data()
+def edit_numericize(df,col,strs_to_remove):
+    processed = df[col]
+    for string in strs_to_remove:
+        processed = processed.str.replace(string,'',regex=False)
+    return pd.to_numeric(processed)
+df['mobile_price'] = edit_numericize(df,'mobile_price',['₹',','])
+df['mobile_price'].unique()
+status['mobile_price'] = 1
+import seaborn as sns
+import numpy as np
+
+mask = np.zeros_like(df.corr())
+mask[np.triu_indices_from(mask)] = True
+
+sns.heatmap(df.corr(),mask=mask, annot=True)
+def plot_correlation_with_col(df, col):
+    sorted_corr = df.corr().sort_values(col)[col][:-1]
+    sorted_corr.plot(kind='bar',figsize = (10,5))
+plot_correlation_with_col(df,'mobile_price')
+def replace_regex_numericize(df,col,chars_to_remove):
+    processed = df[col]
+    for char in chars_to_remove:
+        processed = processed.str.replace(char,'',regex=True)
+    return pd.to_numeric(processed)
+# edit_numericize
+df['disp_size'] = replace_regex_numericize(df,'disp_size',[' cm .*'])
+df['disp_size'].unique()
+status['disp_size'] = 1
+plot_correlation_with_col(df,'mobile_price')
+def replace_regex(df,col,chars_to_remove):
+    processed = df[col]
+    for char in chars_to_remove:
+        processed = processed.str.replace(char,'',regex=True)
+    return processed
+df['mobile_name_brand'] = replace_regex(df, 'mobile_name', [' \(.*\)'])
+df['mobile_name_brand'].unique()
+df['mobile_name_brand_short'] = replace_regex(df, 'mobile_name', [' .*'])
+df['mobile_name_brand_short'].unique()
+def convert_words_to_num(df,cat_col):
+    return df[cat_col].astype('category').cat.codes
+df['mobile_name_brand_new'] = convert_words_to_num(df,'mobile_name_brand')
+df['mobile_name_brand_short_new'] = convert_words_to_num(df,'mobile_name_brand')
+plot_correlation_with_col(df,'mobile_price')
+df['mobile_color_cat'] = convert_words_to_num(df,'mobile_color')
+df['dual_sim_cat'] = convert_words_to_num(df,'dual_sim')
+df['resolution_cat'] = convert_words_to_num(df,'resolution')
+df['os_cat'] = convert_words_to_num(df,'os')
+df['num_cores_cat'] = convert_words_to_num(df,'num_cores')
+df['f_cam_cat'] = convert_words_to_num(df,'f_cam')
+df['network_cat'] = convert_words_to_num(df,'network')
+status['mobile_color'] = 1
+status['dual_sim'] = 1
+status['resolution'] = 1
+status['os'] = 1
+status['num_cores'] = 1
+status['f_cam'] = 1
+status['network'] = 1
+status
+plot_correlation_with_col(df,'mobile_price')
+df['dual_sim'].unique()
+df['dual_sim_ord'] = df['dual_sim'].replace('Dual Sim',2).replace('Single Sim',1)
+df['num_cores'].unique()
+df['num_cores_ord'] = df['num_cores'].replace('Octa Core',8).replace('Quad Core',4).replace('Single Core',1)
+plot_correlation_with_col(df,'mobile_price')
+def plot_grouped_correlation_with_col(df, col):
+    sorted_corr = df.corr().sort_values(col)[col][:-1]
+    sorted_corr.sort_index().plot(kind='bar',figsize = (10,5))
+plot_grouped_correlation_with_col(df,'mobile_price')
