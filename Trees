@@ -1,0 +1,331 @@
+class Node:
+    def __init__(self, key):
+        self.left = None
+        self.right = None
+        self.val = key
+ 
+ 
+# Driver code
+if __name__ == '__main__':
+    # Create root
+    root = Node(1)
+    ''' following is the tree after above statement
+    1
+    / \
+    None None'''
+    root.left = Node(2)
+    root.right = Node(3)
+ 
+    ''' 2 and 3 become left and right children of 1
+ 
+    root.left.left = Node(4)
+    '''4 becomes left child of 2
+ class Node:
+ 
+    # Constructor to create a new node
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+ 
+# Compute the "maxDepth" of a tree -- the number of nodes
+# along the longest path from the root node down to the
+# farthest leaf node
+ 
+ 
+def maxDepth(node):
+    if node is None:
+        return 0
+ 
+    else:
+ 
+        # Compute the depth of each subtree
+        lDepth = maxDepth(node.left)
+        rDepth = maxDepth(node.right)
+ 
+        # Use the larger one
+        if (lDepth > rDepth):
+            return lDepth+1
+        else:
+            return rDepth+1
+ 
+ 
+# Driver program to test above function
+root = Node(1)
+root.left = Node(2)
+root.right = Node(3)
+root.left.left = Node(4)
+root.left.right = Node(5)
+ 
+ 
+print("Height of tree is %d" % (maxDepth(root)))
+class Node:
+    def __init__(self, key):
+        self.left = None
+        self.right = None
+        self.val = key
+ 
+ 
+# A function to do inorder tree traversal
+def printInorder(root):
+ 
+    if root:
+ 
+        # First recur on left child
+        printInorder(root.left)
+ 
+        # then print the data of node
+        print(root.val),
+ 
+        # now recur on right child
+        printInorder(root.right)
+ 
+ 
+# Driver code
+if __name__ == "__main__":
+    root = Node(1)
+    root.left = Node(2)
+    root.right = Node(3)
+    root.left.left = Node(4)
+    root.left.right = Node(5)
+ 
+    # Function call
+    print "\nInorder traversal of binary tree is"
+    printInorder(root)
+class Node:
+   
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+ 
+# Function to print leaf
+# nodes from left to right
+def printLeafNodes(root: Node) -> None:
+ 
+    # If node is null, return
+    if (not root):
+        return
+ 
+    # If node is leaf node,
+    # print its data
+    if (not root.left and
+        not root.right):
+        print(root.data,
+              end = " ")
+        return
+ 
+    # If left child exists,
+    # check for leaf recursively
+    if root.left:
+        printLeafNodes(root.left)
+ 
+    # If right child exists,
+    # check for leaf recursively
+    if root.right:
+        printLeafNodes(root.right)
+ 
+# Driver Code
+if __name__ == "__main__":
+ 
+    # Let us create binary tree shown in
+    # above diagram
+    root = Node(1)
+    root.left = Node(2)
+    root.right = Node(3)
+    root.left.left = Node(4)
+    root.right.left = Node(5)
+    root.right.right = Node(8)
+    root.right.left.left = Node(6)
+    root.right.left.right = Node(7)
+    root.right.right.left = Node(9)
+    root.right.right.right = Node(10)
+ 
+    # print leaf nodes of the given tree
+    printLeafNodes(root)
+ from collections import defaultdict
+ 
+ 
+# This class represents a directed graph
+# using adjacency list representation
+class Graph:
+ 
+    # Constructor
+    def __init__(self):
+ 
+        # Default dictionary to store graph
+        self.graph = defaultdict(list)
+ 
+    # Function to add an edge to graph
+    def addEdge(self, u, v):
+        self.graph[u].append(v)
+ 
+    # Function to print a BFS of graph
+    def BFS(self, s):
+ 
+        # Mark all the vertices as not visited
+        visited = [False] * (max(self.graph) + 1)
+ 
+        # Create a queue for BFS
+        queue = []
+ 
+        # Mark the source node as
+        # visited and enqueue it
+        queue.append(s)
+        visited[s] = True
+ 
+        while queue:
+ 
+            # Dequeue a vertex from
+            # queue and print it
+            s = queue.pop(0)
+            print(s, end=" ")
+ 
+            # Get all adjacent vertices of the
+            # dequeued vertex s. If a adjacent
+            # has not been visited, then mark it
+            # visited and enqueue it
+            for i in self.graph[s]:
+                if visited[i] == False:
+                    queue.append(i)
+                    visited[i] = True
+ 
+ 
+# Driver code
+if __name__ == '__main__':
+ 
+    # Create a graph given in
+    # the above diagram
+    g = Graph()
+    g.addEdge(0, 1)
+    g.addEdge(0, 2)
+    g.addEdge(1, 2)
+    g.addEdge(2, 0)
+    g.addEdge(2, 3)
+    g.addEdge(3, 3)
+ 
+    print("Following is Breadth First Traversal"
+          " (starting from vertex 2)")
+    g.BFS(2)
+ class Node:
+    # Constructor to create a new Node
+    def __init__(self, key):
+        self.key = key
+        self.left = None
+        self.right = None
+ 
+# A utility function to check if a given node is leaf or not
+def isLeaf(node):
+    if node is None:
+        return False
+    if node.left is None and node.right is None:
+        return True
+    return False
+ 
+# This function return sum of all left leaves in a
+# given binary tree
+def leftLeavesSum(root):
+ 
+    # Initialize result
+    res = 0
+     
+    # Update result if root is not None
+    if root is not None:
+ 
+        # If left of root is None, then add key of
+        # left child
+        if isLeaf(root.left):
+            res += root.left.key
+        else:
+            # Else recur for left child of root
+            res += leftLeavesSum(root.left)
+ 
+        # Recur for right child of root and update res
+        res += leftLeavesSum(root.right)
+    return res
+ 
+# Driver program to test above function
+ 
+# Let us construct the Binary Tree shown in the above function
+root = Node(20)
+root.left = Node(9)
+root.right = Node(49)
+root.right.left = Node(23)       
+root.right.right = Node(52)
+root.right.right.left = Node(50)
+root.left.left = Node(5)
+root.left.right = Node(12)
+root.left.right.right = Node(12)
+print ("Sum of left leaves is", leftLeavesSum(root))
+ def SumNodes(l):
+     
+    # no of leaf nodes
+    leafNodeCount = pow(2, l - 1)
+ 
+    # list of vector to store nodes of
+    # all of the levels
+    vec = [[] for i in range(l)]
+ 
+    # store the nodes of last level
+    # i.e., the leaf nodes
+    for i in range(1, leafNodeCount + 1):
+        vec[l - 1].append(i)
+ 
+    # store nodes of rest of the level
+    # by moving in bottom-up manner
+    for i in range(l - 2, -1, -1):
+        k = 0
+ 
+        # loop to calculate values of parent nodes
+        # from the children nodes of lower level
+        while (k < len(vec[i + 1]) - 1):
+ 
+            # store the value of parent node as
+            # Sum of children nodes
+            vec[i].append(vec[i + 1][k] +
+                          vec[i + 1][k + 1])
+            k += 2
+ 
+    Sum = 0
+ 
+    # traverse the list of vector
+    # and calculate the Sum
+    for i in range(l):
+        for j in range(len(vec[i])):
+            Sum += vec[i][j]
+ 
+    return Sum
+ 
+# Driver Code
+if __name__ == '__main__':
+    l = 3
+ 
+    print(SumNodes(l))
+ class newNode:
+    def __init__(self, data):
+        self.data = data
+        self.left = self.right = None
+ 
+def printOddNodes(root, isOdd = True):
+     
+    # If empty tree
+    if (root == None):
+        return
+ 
+    # If current node is of odd level
+    if (isOdd):
+        print(root.data, end = " ")
+ 
+    # Recur for children with isOdd
+    # switched.
+    printOddNodes(root.left, not isOdd)
+    printOddNodes(root.right, not isOdd)
+ 
+# Driver code
+if __name__ == '__main__':
+    root = newNode(1)
+    root.left = newNode(2)
+    root.right = newNode(3)
+    root.left.left = newNode(4)
+    root.left.right = newNode(5)
+    printOddNodes(root)
